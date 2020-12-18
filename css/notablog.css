@@ -108,7 +108,7 @@
   font-size: 75px;
 }
 
-.Header__Icon2 {
+.Header__Icon__2 {
   line-height: 1.1;
   /* On Android Firefox, emoji can't be displayed if font-size > 77px. */
   font-size: 150px;
@@ -273,9 +273,6 @@
   .Header__Icon {
     font-size: 55px;
   }
-  .Header__Icon2 {
-    font-size: 80px;
-  }
   .Header__Cover>img {
     height: calc(30vh + 30px);
   }
@@ -291,12 +288,5 @@
   height: 1.2em;
   /* Setting width prevents content shifting after image loaded. */
   width: 1.2em;
-  vertical-align: sub;
-}
-
-.inline-img-icon2 {
-  height: 3.6em;
-  /* Setting width prevents content shifting after image loaded. */
-  width: 3.6em;
   vertical-align: sub;
 }
