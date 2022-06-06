@@ -14,7 +14,7 @@ comments: false
 Every fan of generative modeling is living an absolute dream for the last year and the half (at least!). Smart people from big companies decided to spoil us with several new developments/papers on the text-to-image generation, each one arguably better than previous. As an effect, we have been observing a social media surge of spectacular, purely AI generated images, such as this golden retriever answering tough questions during his political campaign or a brain riding a rocketship to the moon.
 
 ![](/assets/images/combine_images.png)
-*Sources: https://openai.com/dall-e-2/ and https://imagen.research.google/*
+*Sources: [https://openai.com/dall-e-2/](https://openai.com/dall-e-2/) and [https://imagen.research.google/](https://imagen.research.google/)*
 
 In this post we will sum up the very recent history of solving the text-to-image generation problem and explain the latest developments regarding diffusion models, which are playing a huge role in the new, state-of-the-art architectures.
 
