@@ -16,6 +16,10 @@ Every fan of generative modeling is living an absolute dream for the last year a
 ![](/assets/images/combine_images.png)
 *Sources: [https://openai.com/dall-e-2/](https://openai.com/dall-e-2/) and [https://imagen.research.google/](https://imagen.research.google/)*
 
+__Figure 3 - Diffusion Probabilistic Model__
+{: style="text-align: center;" }
+<img class="image" src='{{ /assets/images/diffusion.png }}'>
+
 In this post we will sum up the very recent history of solving the text-to-image generation problem and explain the latest developments regarding diffusion models, which are playing a huge role in the new, state-of-the-art architectures.
 
 ![Short timeline of image generation and text-to-image solutions.](/assets/images/Screenshot_2022-05-31_at_13.31.46.png)
@@ -24,7 +28,7 @@ In this post we will sum up the very recent history of solving the text-to-image
 
 ## DALL·E
 
-In 2020 OpenAl team [Brown et al., 2020] published GPT-3 model - a multi-modal does-it-all huge language model, capable of machine translation, text generation, semantic analysis etc. Model quickly became regarded as the state-of-the-art for language modeling solutions and DALL·E [Ramesh et al. 2021] can be viewed as a natural expansion of the transformer capabilities. 
+In 2020 OpenAl team [Brown et al., 2020] published GPT-3 model - a multimodal does-it-all huge language model, capable of machine translation, text generation, semantic analysis etc. Model quickly became regarded as the state-of-the-art for language modeling solutions and DALL·E [Ramesh et al. 2021] can be viewed as a natural expansion of the transformer capabilities. 
 
 ### Autoregressive approach
 
@@ -60,10 +64,6 @@ Idea is quite straightforward, inspired by non-equilibrium thermodynamics, altho
 ### Forward image diffusion
 
 Altogether, this process can be described as gradually applying Gaussian noise to the image until it becomes entirely unrecognisable. This process is fixed in stochastic sense - the procedure of noise application can be formulated as the Markov chain of sequential diffusion steps. To untangle the difficult wording a little bit, we can neatly describe it with a few formulas. Assume that images have a certain starting distribution $$q(\bf{x}_{0})$$. We can sample just one image from this distribution - $$\bf{x}_{0}$$. We want to perform a chain of diffusion steps $$\bf{x}_{0} \to \bf{x}_{1} \to ... \to \bf{x}_{\it{T}}$$ , each step disintegrating the image more and more. 
-
-![Visualisation of gaussian noising procedure](/assets/images/Untitled%201.png)
-
-*Visualisation of gaussian noising procedure. Source: author*
 
 How exactly is the noise applied? It is formally defined by a *noising schedule $$\{\beta_{t}\}^{T}_{t=1}$$,* where for every $$t = 1,...,T$$ we have $$\beta_{t} \in (0,1)$$. With such schedule we can formally define the process as
 
