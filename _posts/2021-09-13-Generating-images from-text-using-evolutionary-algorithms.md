@@ -19,6 +19,7 @@ Generating images from text has been a subject of rapid development as it might 
 
 
 ![Eight images generated from the input text snippet. Source: author](/assets/images/redgothicchurch.png)
+
 *Eight images generated from the input text snippet. Source: author*
 
 ## Framework description
