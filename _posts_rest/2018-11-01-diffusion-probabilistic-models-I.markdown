@@ -1,4 +1,4 @@
-<!-- ---
+---
 layout: post
 title:  "Diffusion Models as a kind of VAE"
 date:   2021-06-29
@@ -84,7 +84,7 @@ a deterministic data-dependent function and data-independent noise [[3]](#citati
 
 __Figure 1 - Graphical Model for VAE__
 {: style="text-align: center;" }
-<img class="image" src='{{ "/assets/images/vae.png" }}'>
+<img class="image" src='{{ "/assets/images/Screenshot_2022-05-31_at_13.31.46.png)" }}'>
 
 So much has been written about VAEs that I am barely scratching the surface here. For those interested to learn more,
 see the section on [further reading](#further-reading).
@@ -657,4 +657,4 @@ resources that I have bookmarked:
 [code]: https://github.com/angusturner/diffuse
 [twitter]: https://twitter.com/AngusTurner9
 [previous post]: https://angusturner.github.io/generative_models/2017/11/03/pytorch-gaussian-mixture-model.html
-[Yang Song]: https://yang-song.github.io/blog/2021/score/ -->
+[Yang Song]: https://yang-song.github.io/blog/2021/score/
