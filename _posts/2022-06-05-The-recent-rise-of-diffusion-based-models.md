@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Recent rise of diffusion-based models"
+title:  "The recent rise of diffusion-based models"
 date:   2022-06-06
 categories: generative_models
 comments: false
@@ -11,16 +11,12 @@ comments: false
 
 ## Introduction
 
-Every fan of generative modeling is living an absolute dream for the last year and the half (at least!). Smart people from big companies decided to spoil us with several new developments/papers on the text-to-image generation, each one arguably better than previous. As an effect, we have been observing a social media surge of spectacular, purely AI generated images, such as this golden retriever answering tough questions during his political campaign or a brain riding a rocketship to the moon.
+Every fan of generative modeling has been living an absolute dream for the last year and a half (at least!). The past few months have brought several developments and papers on text-to-image generation, each one arguably better than the last. We have observed a social media surge of spectacular, purely AI-generated images, such as this golden retriever answering tough questions on the campaign trail or a brain riding a rocketship to the moon.
 
 ![](/assets/images/combine_images.png)
 *Sources: [https://openai.com/dall-e-2/](https://openai.com/dall-e-2/) and [https://imagen.research.google/](https://imagen.research.google/)*
 
-__Figure 3 - Diffusion Probabilistic Model__
-{: style="text-align: center;" }
-<img class="image" src='{{ /assets/images/diffusion.png }}'>
-
-In this post we will sum up the very recent history of solving the text-to-image generation problem and explain the latest developments regarding diffusion models, which are playing a huge role in the new, state-of-the-art architectures.
+In this post, we will sum up the very recent history of solving the text-to-image generation problem and explain the latest developments regarding diffusion models, which are playing a huge role in the new, state-of-the-art architectures.
 
 ![Short timeline of image generation and text-to-image solutions.](/assets/images/Screenshot_2022-05-31_at_13.31.46.png)
 
@@ -268,6 +264,10 @@ As expected, a large portion of the publication is devoted to the comparison bet
 As usual, with the new architecture gaining recognition there is a large surge of interesting publications and solutions emerging from the void. The pace of developments makes it nearly impossible to track every interesting publication. There are also a lot of interesting characteristics  of the models to discover other than raw generative power, such as image inpainting, style transfer and image editing.
 
 Apart from the understandable excitement over a new era of generative models, there are some shortcomings embedded into the diffusion process structure, such as slow sampling speed compared to previous models [Vahdat and Kreis, 2022].
+
+<p align="center">
+  <img src="/assets/images/Untitled%2010.png" />
+</p>
 
 ![Source: [https://developer.nvidia.com/blog/improving-diffusion-models-as-an-alternative-to-gans-part-1/](https://developer.nvidia.com/blog/improving-diffusion-models-as-an-alternative-to-gans-part-1/)](/assets/images/Untitled%2010.png)
 
