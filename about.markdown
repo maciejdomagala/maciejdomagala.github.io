@@ -15,7 +15,7 @@ permalink: /about/
     }
 </style>
 
-### Profile
+### About me
 
 {% include about_header.html %}
 
