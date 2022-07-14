@@ -13,12 +13,17 @@ comments: false
 
 Every fan of generative modeling has been living an absolute dream for the last year and a half (at least!). The past few months have brought several developments and papers on text-to-image generation, each one arguably better than the last. We have observed a social media surge of spectacular, purely AI-generated images, such as this golden retriever answering tough questions on the campaign trail or a brain riding a rocketship to the moon.
 
-![](/assets/images/combine_images.png)
+<p align="center">
+  <img src="/assets/images/combine_images.png" />
+</p>
+
 *Sources: [https://openai.com/dall-e-2/](https://openai.com/dall-e-2/) and [https://imagen.research.google/](https://imagen.research.google/)*
 
 In this post, we will sum up the very recent history of solving the text-to-image generation problem and explain the latest developments regarding diffusion models, which are playing a huge role in the new, state-of-the-art architectures.
 
-![Short timeline of image generation and text-to-image solutions.](/assets/images/Screenshot_2022-05-31_at_13.31.46.png)
+<p align="center">
+  <img src="/assets/images/Screenshot_2022-05-31_at_13.31.46.png" />
+</p>
 
 *Short timeline of image generation and text-to-image solutions. Source: author*
 
@@ -277,33 +282,162 @@ For anyone who would like to admire some more examples of DALL·E 2 generative p
 
 ## References
 
-### Publications
+{% include citation.html
+    no="1"
+    authors="Jascha Sohl-Dickstein, Eric A. Weiss, Niru Maheswaranathan, Surya Ganguli"
+    title="Deep Unsupervised Learning using Nonequilibrium Thermodynamics"
+    year="2015"
+    link="https://arxiv.org/abs/1503.03585v8"
+%}
 
-- [Sohl-Dickstein et al., 2015] Deep Unsupervised Learning using
-Nonequilibrium Thermodynamics, [https://arxiv.org/pdf/1503.03585.pdf](https://arxiv.org/pdf/1503.03585.pdf)
-- [Ho et al., 2020] Denoising diffusion probabilistic models, [https://arxiv.org/pdf/2006.11239.pdf](https://arxiv.org/pdf/2006.11239.pdf)
-- [Brown et al., 2020] Language Models are Few-Shot Learners, [https://arxiv.org/abs/2005.14165](https://arxiv.org/abs/2005.14165)
-- [Roberts et al., 2020] How Much Knowledge Can You Pack Into the Parameters of a Language Model?, [https://arxiv.org/pdf/2002.08910.pdf](https://arxiv.org/pdf/2002.08910.pdf)
-- [Ho & Salimans, 2021] Classifier-Free Diffusion Guidance, [https://openreview.net/pdf?id=qw8AKxfYbI](https://openreview.net/pdf?id=qw8AKxfYbI)
-- [Nichol et al., 2021] GLIDE: Towards Photorealistic Image Generation and Editing with Text-Guided Diffusion Models, [https://arxiv.org/abs/2112.10741](https://www.youtube.com/redirect?event=video_description&redir_token=QUFFLUhqbC1Ya3NvVzV0NG5xcEtfeHE2cloxUG16YWhuQXxBQ3Jtc0trZGttQm9tenh3UnAwSGo0U3JoeFZpT0E5cVFFX1JjQURIb2NpeV9SelB2dFRDbDJWRXE4R1EzM0QxUjRUVmp6WDhEOGh2OVEtTjlRTUw0N04tU1hnNzNINFhZSzduZVNSejBUYjAxeW8ySTFQcXg5Yw&q=https%3A%2F%2Farxiv.org%2Fabs%2F2112.10741&v=fbLgFrlTnGU)
-- [Ramesh et al. 2021] Zero-Shot Text-to-Image Generation, [https://arxiv.org/pdf/2102.12092.pdf](https://arxiv.org/pdf/2102.12092.pdf)
-- [Dhariwal & Nichol, 2021] Diffusion Models Beat GANs on Image Synthesis, [https://arxiv.org/pdf/2105.05233.pdf](https://arxiv.org/pdf/2105.05233.pdf)
-- [Radford et al., 2021] Learning Transferable Visual Models From Natural Language Supervision, [https://arxiv.org/pdf/2103.00020.pdf](https://arxiv.org/pdf/2103.00020.pdf)
-- [Ho et al., 2021], Cascaded Diffusion Models for High Fidelity Image Generation, [https://arxiv.org/pdf/2106.15282.pdf](https://arxiv.org/pdf/2106.15282.pdf)
-- [Ramesh et al., 2022] Hierarchical Text-Conditional Image Generation with CLIP Latents, [https://arxiv.org/pdf/2204.06125.pdf](https://arxiv.org/pdf/2204.06125.pdf)
-- [Saharia et al., 2022] Photorealistic Text-to-Image Diffusion Models with Deep Language Understanding, [https://arxiv.org/pdf/2205.11487.pdf](https://arxiv.org/pdf/2205.11487.pdf)
+{% include citation.html
+    no="2"
+    authors="Jonathan Ho, Ajay Jain, Pieter Abbeel"
+    title="Denoising Diffusion Probabilistic Models"
+    year="2020"
+    link="https://arxiv.org/abs/2006.11239v2"
+%}
 
-### Blog posts
+{% include citation.html
+    no="3"
+    authors="Tom B. Brown et al."
+    title="Language Models are Few-Shot Learners"
+    year="2020"
+    link="https://arxiv.org/abs/2005.14165"
+%}
 
-- [Angus Turner, 2021] “Diffusion Models as a kind of VAE”, [https://angusturner.github.io/generative_models/2021/06/29/diffusion-probabilistic-models-I.html](https://angusturner.github.io/generative_models/2021/06/29/diffusion-probabilistic-models-I.html)
-- [Lillian Weng, 2021] “What are Diffusion Models?”, [https://lilianweng.github.io/posts/2021-07-11-diffusion-models/](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/)
-- [Ayan Das, 2021] “An introduction to Diffusion Probabilistic Models”, [https://ayandas.me/blog-tut/2021/12/04/diffusion-prob-models.html](https://ayandas.me/blog-tut/2021/12/04/diffusion-prob-models.html)
-- [Aditya Ramesh, 2022] How DALL·E 2 works, [http://adityaramesh.com/posts/dalle2/dalle2.html](http://adityaramesh.com/posts/dalle2/dalle2.html)
-- [Vahdat and Kreis, 2022], Improving Diffusion Models as an Alternative To GANs, Part 1, [https://developer.nvidia.com/blog/improving-diffusion-models-as-an-alternative-to-gans-part-1/](https://developer.nvidia.com/blog/improving-diffusion-models-as-an-alternative-to-gans-part-1/)
+{% include citation.html
+    no="4"
+    authors="Adam Roberts, Colin Raffel, Noam Shazeer"
+    title="How Much Knowledge Can You Pack Into the Parameters of a Language Model?"
+    year="2020"
+    link="https://arxiv.org/abs/2002.08910?fbclid=IwAR1nm66Of1JzM5cnJvHtjuy0w-5JLYOSoTpteXXZSr0JcSkyJuApIPJlsHQ"
+%}
 
-### Misc
+{% include citation.html
+    no="5"
+    authors="Jonathan Ho, Tim Salimans"
+    title="Classifier-Free Diffusion Guidance"
+    year="2021"
+    link="https://openreview.net/pdf?id=qw8AKxfYbI"
+%}
 
-- [DrawBench prompts], [DrawBench](https://docs.google.com/spreadsheets/d/1y7nAbmR4FREi6npB1u-Bo3GFdwdOPYJc617rBOxIRHY/htmlview?pru=AAABgRqAJJQ*agF3cOZ-eQVuWLxxWEwiWQ#gid=0)
-- [DALL·E 2 subreddit], [https://www.reddit.com/r/dalle2/](https://www.reddit.com/r/dalle2/)
-- [OpenAI’s waitilist], [https://labs.openai.com/waitlist](https://labs.openai.com/waitlist)
-- [Phil Wang’s repositories], [https://github.com/lucidrains?tab=repositories](https://github.com/lucidrains?tab=repositories)
+{% include citation.html
+    no="6"
+    authors="Alex Nichol et al."
+    title="GLIDE: Towards Photorealistic Image Generation and Editing with Text-Guided Diffusion Models"
+    year="2021"
+    link="https://arxiv.org/abs/2112.10741?s=09"
+%}
+
+{% include citation.html
+  no="7"
+  authors="Aditya Ramesh et al."
+  title="Zero-Shot Text-to-Image Generation"
+  year="2021"
+  link="https://arxiv.org/abs/2102.12092"
+%}
+
+{% include citation.html
+  no="8"
+  authors="Prafulla Dhariwal, Alex Nichol"
+  title="Diffusion Models Beat GANs on Image Synthesis"
+  year="2021"
+  link="https://arxiv.org/abs/2105.05233?curius=520"
+%}
+
+{% include citation.html
+  no="9"
+  authors="Alec Radford et al."
+  title="Learning Transferable Visual Models From Natural Language Supervision"
+  year="2021"
+  link="https://arxiv.org/abs/2103.00020"
+%}
+
+{% include citation.html
+  no="10"
+  authors="Jonathan Ho et al."
+  title="Cascaded Diffusion Models for High Fidelity Image Generation"
+  year="2021"
+  link="https://arxiv.org/abs/2106.15282"
+%}
+
+{% include citation.html
+  no="11"
+  authors="Aditya Ramesh et al."
+  title="Hierarchical Text-Conditional Image Generation with CLIP Latents"
+  year="2022"
+  link="https://arxiv.org/abs/2204.06125"
+%}
+
+{% include citation.html
+  no="12"
+  authors="Chitwan Saharia et al."
+  title="Photorealistic Text-to-Image Diffusion Models with Deep Language Understanding"
+  year="2022"
+  link="https://arxiv.org/abs/2205.11487"
+%}
+
+{% include citation.html
+    no="13"
+    authors="Lilian Weng"
+    title="What are Diffusion Models?"
+    year="2021"
+    link="https://lilianweng.github.io/posts/2021-07-11-diffusion-models/"
+%}
+
+{% include citation.html
+    no="14"
+    authors="Angus Turner"
+    title="Diffusion Models as a kind of VAE"
+    year="2021"
+    link="https://angusturner.github.io/generative_models/2021/06/29/diffusion-probabilistic-models-I.html"
+%}
+
+{% include citation.html
+    no="15"
+    authors="Ayan Das"
+    title="An introduction to Diffusion Probabilistic Models"
+    year="2021"
+    link="https://ayandas.me/blog-tut/2021/12/04/diffusion-prob-models.html"
+%}
+
+{% include citation.html
+    no="16"
+    authors="Arash Vahdat, Karsten Kreis"
+    title="Improving Diffusion Models as an Alternative To GANs, Part 1"
+    year="2022"
+    link="https://developer.nvidia.com/blog/improving-diffusion-models-as-an-alternative-to-gans-part-1/"
+%}
+
+{% include citation.html
+    no="17"
+    authors=""
+    title="DrawBench prompts"
+    year="2022"
+    link="https://docs.google.com/spreadsheets/d/1y7nAbmR4FREi6npB1u-Bo3GFdwdOPYJc617rBOxIRHY/htmlview?pru=AAABgRqAJJQ*agF3cOZ-eQVuWLxxWEwiWQ#gid=0"
+%}
+
+{% include citation.html
+    no="18"
+    authors=""
+    title="DALL·E 2 subreddit"
+    year="2022"
+    link="https://www.reddit.com/r/dalle2/"
+%}
+
+{% include citation.html
+    no="19"
+    authors=""
+    title="OpenAI’s waitilist"
+    year="2022"
+    link="https://labs.openai.com/waitlist"
+%}
+
+{% include citation.html
+    no="20"
+    authors="Phil Wang"
+    title="Phil Wang’s repositories"
+    year="2022"
+    link="https://github.com/lucidrains?tab=repositories"
+%}
