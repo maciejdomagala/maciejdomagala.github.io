@@ -284,7 +284,7 @@ For anyone who would like to admire some more examples of DALL·E 2 generative p
 
 {% include citation.html
     no="1"
-    authors="Tom B. Brown et al."
+    authors="Tom B. Brown et al"
     title="Language Models are Few-Shot Learners"
     year="2020"
     link="https://arxiv.org/abs/2005.14165"
@@ -324,7 +324,7 @@ For anyone who would like to admire some more examples of DALL·E 2 generative p
 
 {% include citation.html
     no="6"
-    authors="Alex Nichol et al."
+    authors="Alex Nichol et al"
     title="GLIDE: Towards Photorealistic Image Generation and Editing with Text-Guided Diffusion Models"
     year="2021"
     link="https://arxiv.org/abs/2112.10741?s=09"
@@ -332,7 +332,7 @@ For anyone who would like to admire some more examples of DALL·E 2 generative p
 
 {% include citation.html
   no="7"
-  authors="Aditya Ramesh et al."
+  authors="Aditya Ramesh et al"
   title="Zero-Shot Text-to-Image Generation"
   year="2021"
   link="https://arxiv.org/abs/2102.12092"
@@ -348,7 +348,7 @@ For anyone who would like to admire some more examples of DALL·E 2 generative p
 
 {% include citation.html
   no="9"
-  authors="Alec Radford et al."
+  authors="Alec Radford et al"
   title="Learning Transferable Visual Models From Natural Language Supervision"
   year="2021"
   link="https://arxiv.org/abs/2103.00020"
@@ -356,7 +356,7 @@ For anyone who would like to admire some more examples of DALL·E 2 generative p
 
 {% include citation.html
   no="10"
-  authors="Jonathan Ho et al."
+  authors="Jonathan Ho et al"
   title="Cascaded Diffusion Models for High Fidelity Image Generation"
   year="2021"
   link="https://arxiv.org/abs/2106.15282"
@@ -364,7 +364,7 @@ For anyone who would like to admire some more examples of DALL·E 2 generative p
 
 {% include citation.html
   no="11"
-  authors="Aditya Ramesh et al."
+  authors="Aditya Ramesh et al"
   title="Hierarchical Text-Conditional Image Generation with CLIP Latents"
   year="2022"
   link="https://arxiv.org/abs/2204.06125"
@@ -372,7 +372,7 @@ For anyone who would like to admire some more examples of DALL·E 2 generative p
 
 {% include citation.html
   no="12"
-  authors="Chitwan Saharia et al."
+  authors="Chitwan Saharia et al"
   title="Photorealistic Text-to-Image Diffusion Models with Deep Language Understanding"
   year="2022"
   link="https://arxiv.org/abs/2205.11487"
