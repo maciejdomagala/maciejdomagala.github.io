@@ -269,8 +269,6 @@ Apart from the understandable excitement over a new era of generative models, th
   <img src="/assets/images/Untitled%2010.png" />
 </p>
 
-![Source: [https://developer.nvidia.com/blog/improving-diffusion-models-as-an-alternative-to-gans-part-1/](https://developer.nvidia.com/blog/improving-diffusion-models-as-an-alternative-to-gans-part-1/)](/assets/images/Untitled%2010.png)
-
 *Source: [https://developer.nvidia.com/blog/improving-diffusion-models-as-an-alternative-to-gans-part-1/](https://developer.nvidia.com/blog/improving-diffusion-models-as-an-alternative-to-gans-part-1/)*
 
 For anyone who likes to get deep into the bits of implementation, I highly recommend going through Phil Wang’s (@lucidrains on github) repositories [Phil Wang’s repositories], which is a collaborative effort from many people to recreate the unpublished models in PyTorch.
