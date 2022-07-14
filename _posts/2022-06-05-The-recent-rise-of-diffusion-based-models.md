@@ -44,35 +44,39 @@ The final version was trained on 250 million text-image pairs obtained from the 
 
 During inference, the model is able to output a whole batch of generated images. But how can we estimate which images are *best*? Simultaneously with the publication of DALL·E, the OpenAI team presented a solution for image and text linking called CLIP [Radford et al., 2021]. In a nutshell, CLIP offers a reliable way of pairing a text snippet with its image representation. Putting aside all of the technical aspects, the idea of training this type of model is fairly simple - take the text snippet and encode it, take an image and encode it. Do that for a lot of examples (400 million (image, text) pairs) and train the model in a *contrastive* fashion.
 
-![Visualisation of CLIP contrastive pre-training, source: [https://arxiv.org/pdf/2103.00020.pdf](https://arxiv.org/pdf/2103.00020.pdf)](/assets/images/Untitled.png)
+<p align="center">
+  <img src="/assets/images/Untitled.png" />
+</p>
 
 *Visualisation of CLIP contrastive pre-training, source: [https://arxiv.org/pdf/2103.00020.pdf](https://arxiv.org/pdf/2103.00020.pdf)*
 
-Having this kind of *mapping* allows us to estimate which of the generated images is a best match considering the text input. Anyone who would like to see the power of CLIP - feel free to check out my previous post on combining CLIP and evolutionary algorithms to generate images.
+This kind of *mapping* allows us to estimate which of the generated images are the best match considering the text input.
+DALL·E attracted major attention from people both inside and outside the AI world; it gained lots of publicity and stirred a great deal of conversation. Even so, it only gets an honorable mention here, as the trends shifted quite quickly towards novel ideas.
 
-DALL·E caught a lot of attention from people inside and outside AI world, it gained lots of publicity and stirred a lot of conversation. Even though - it is only a honorable mention here, as the fashion quite quickly shifts towards novel ideas.
 
 ## All you need is diffusion
 
-[Sohl-Dickstein et al., 2015] proposed a fresh idea on the subject of image generation - diffusion models.
+Sohl-Dickstein et al. [[2]](#citation-2) proposed a fresh idea on the subject of image generation - diffusion models.
 
-![Generative models, source: [https://lilianweng.github.io/posts/2021-07-11-diffusion-models/](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/)](/assets/images/Screenshot_2022-05-31_at_11.12.14.png)
+<p align="center">
+  <img src="/assets/images/Screenshot_2022-05-31_at_11.12.14.png" />
+</p>
 
-*Generative models, source: [https://lilianweng.github.io/posts/2021-07-11-diffusion-models/](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/)*
+*Generative models, source: [[13]](#citation-13)*
 
-Idea is quite straightforward, inspired by non-equilibrium thermodynamics, although underneath it is packed with some interesting mathematical concepts. Here, we are also seeing a concept of encoder-decoder type of structure, but the underlying idea is a bit different than what we can observe in traditional variational autoencoders. To understand the basics this model, we need to describe forward and reverse diffusion processes.
+The idea is inspired by non-equilibrium thermodynamics, although underneath it is packed with some interesting mathematical concepts. We can notice the already known concept of encoder-decoder structure here, but the underlying idea is a bit different than what we can observe in traditional variational autoencoders. To understand the basics of this model, we need to describe forward and reverse diffusion processes.
 
 ### Forward image diffusion
 
-Altogether, this process can be described as gradually applying Gaussian noise to the image until it becomes entirely unrecognisable. This process is fixed in stochastic sense - the procedure of noise application can be formulated as the Markov chain of sequential diffusion steps. To untangle the difficult wording a little bit, we can neatly describe it with a few formulas. Assume that images have a certain starting distribution $$q(\bf{x}_{0})$$. We can sample just one image from this distribution - $$\bf{x}_{0}$$. We want to perform a chain of diffusion steps $$\bf{x}_{0} \to \bf{x}_{1} \to ... \to \bf{x}_{\it{T}}$$ , each step disintegrating the image more and more. 
+This process can be described as gradually applying Gaussian noise to the image until it becomes entirely unrecognizable. This process is fixed in a stochastic sense - the noise application procedure can be formulated as the Markov chain of sequential diffusion steps. To untangle the difficult wording a little bit, we can neatly describe it with a few formulas. Assume that images have a certain starting distribution $$q(\bf{x}_{0})$$. We can sample just one image from this distribution - $$\bf{x}_{0}$$. We want to perform a chain of diffusion steps $$\bf{x}_{0} \to \bf{x}_{1} \to ... \to \bf{x}_{\it{T}}$$ , each step disintegrating the image more and more. 
 
-How exactly is the noise applied? It is formally defined by a *noising schedule $$\{\beta_{t}\}^{T}_{t=1}$$,* where for every $$t = 1,...,T$$ we have $$\beta_{t} \in (0,1)$$. With such schedule we can formally define the process as
+How exactly is the noise applied? It is formally defined by a *noising schedule $$\{\beta_{t}\}^{T}_{t=1}$$,* where for every $$t = 1,...,T$$ we have $$\beta_{t} \in (0,1)$$. With such a schedule we can formally define the forward process as
 
 $$
       q\left(\mathbf{x}_{t} \mid \mathbf{x}_{t-1}\right)=\mathcal{N}\left(\sqrt{1-\beta_{t}} \mathbf{x}_{t-1}, \beta_{t} \mathbf{I}\right).
 $$
 
-That is about it on the forward process, there are just two more things worth mentioning:
+There are just two more things worth mentioning:
 
 - As the number of noising steps is going up $$(T \to \infty)$$, the final distribution $$q(\mathbf{x}_{T})$$ approaches a very handy isotropic Gaussian distribution. That makes any future sampling from *noised* distribution efficient and easy.
 - Noising with Gaussian kernel provides another benefit - there is no need to walk step-by-step through noising process to achieve any intermediate latent state. We can sample them directly thanks to reparametrization
@@ -86,9 +90,9 @@ That is about it on the forward process, there are just two more things worth me
 
 ### Reverse image diffusion
 
-We have a nicely defined process. Someone might ask - so what? Why can’t we just define a reverse process $$q\left(\mathbf{x}_{t-1} \mid \mathbf{x}_{t}\right)$$ and trace back from the noise to the image? First of all, that would fail conceptually, as we want to have a neural network that *learns* how to deal with a problem - we shouldn’t provide it with a clear solution. And second of all, we cannot quite do that. It would require a marginalization over the entire data distribution. To get back to the starting distribution $$q(\bf{x}_{0})$$ from the noised sample we would have to marginalize over all of the ways we could arise at $$\mathbf{x}_{0}$$ from the noise, including all of the latent states inbetween - $$\int q(\mathbf{x}_{0:T})d\mathbf{x}_{1:T}$$ - which is intractable. So, if we cannot calculate it, surely we can… approximate it!
+We have a nicely defined forward process. One might ask - so what? Why can’t we just define a reverse process $$q\left(\mathbf{x}_{t-1} \mid \mathbf{x}_{t}\right)$$ and trace back from the noise to the image? First of all, that would fail conceptually, as we want to have a neural network that learns how to deal with a problem - we shouldn’t provide it with a clear solution. And second of all, we cannot quite do that, as it would require marginalization over the entire data distribution. To get back to the starting distribution $$q(\bf{x}_{0})$$ from the noised sample we would have to marginalize over all of the ways we could arise at $$\mathbf{x}_{0}$$ from the noise, including all of the latent states. That means calculating $$\int q(\mathbf{x}_{0:T})d\mathbf{x}_{1:T}$$, which is intractable. So, if we cannot calculate it, surely we can… approximate it!
 
-The core idea is to develop a reliable solution - in the form of learnable network - that successfully approximates the reverse diffusion process. First way is to achieve that by estimating mean and covariance for denoising steps
+The core idea is to develop a reliable solution - in the form of a learnable network - that successfully approximates the reverse diffusion process. The first way to achieve that is by estimating the mean and covariance for denoising steps
 
 $$
 p_{\theta}\left(\mathbf{x}_{t-1} \mid \mathbf{x}_{t}\right)=\mathcal{N}(\mu_{\theta}(\mathbf{x}_{t}, t), \Sigma_{\theta}(\mathbf{x}_{t}, t) ).
@@ -96,8 +100,11 @@ $$
 
 In a practical sense, $$\mu_{\theta}(\mathbf{x}_{t}, t)$$ can be estimated via neural network and $$\Sigma_{\theta}(\mathbf{x}_{t}, t)$$ can be fixed to a certain constant related with the noising schedule, such as $$\beta_{t}\mathbf{I}$$.
 
-![Forward and reverse diffusion processes, source: [Angus Turner, 2021]](/assets/images/Untitled%202.png)
-*Forward and reverse diffusion processes, source: [Angus Turner, 2021]*
+<p align="center">
+  <img src="/assets/images/Untitled%202.png" />
+</p>
+
+*Forward and reverse diffusion processes, source: [[14]](#citation-14)*
 
 Estimating $$\mu_{\theta}(\mathbf{x}_{t}, t)$$ this way is possible, and was done, but [Ho et al., 2020] came up with a different way of training - a neural network $$\epsilon_{\theta}(\mathbf{x}_{t}, t)$$ can be trained to predict the noise $$\epsilon$$ from the earlier formulation of $$q\left(\mathbf{x}_{t} \mid \mathbf{x}_{0}\right)$$.
 
