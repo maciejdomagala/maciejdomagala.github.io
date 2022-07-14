@@ -132,8 +132,7 @@ The above part itself explains how we can perceive the diffusion model as genera
 One way of introducing the guidance in the training process is to train a separate model, which acts as a classifier of noisy images. At each step of denoising, the classifier checks whether the image is denoised in the right direction and contributes its own gradient of loss function into the overall loss of diffusion model.
 [Ho & Salimans, 2021] proposed an idea on how to feed the class information into the model without the need to train an additional classifier. During the training the model $\epsilon_{\theta}(\mathbf{x}{t}, t \mid y)$ is sometimes (with fixed probability) not shown the actual class $y$. Instead, the class label is replaced with the null label $\empty$. So it learns to perform diffusion with and without the guidance. For inference, the model performs two predictions, once given the class label $\epsilon{\theta}(\mathbf{x}{t}, t \mid y)$ and once not $\epsilon{\theta}(\mathbf{x}{t}, t \mid \empty)$. The final prediction of the model is moved away from $\epsilon{\theta}(\mathbf{x}{t}, t \mid \empty)$ and towards $\epsilon{\theta}(\mathbf{x}_{t}, t \mid y)$ by scaling with guidance scale $s \geqslant 1$.
 
-This kind of classifier-free guidance uses only the main model’s comprehension - an additional classifier is not needed - which yields better results according to [Nichol et al. 2021].
-
+This kind of classifier-free guidance uses only the main model’s comprehension - an additional classifier is not needed - which yields better results according to Nichol et al. [[6]](#citation-6).
 
 The above part itself explains how we can perceive the diffusion model as generative. Once the model $$\epsilon_{\theta}(\mathbf{x}_{t}, t)$$ is trained, we can use it to run the noise $$\mathbf{x}_{t}$$ back to $$\mathbf{x}_{0}$$. Given that it is straightforward to sample the noise from isotropic Gaussian distribution, we can obtain limitless image variations. We can also guide the image generation by feeding additional information to the network during the training process. Assuming that the images are labeled, the information about class $y$ can be fed into a class-conditional diffusion model $$\epsilon_{\theta}(\mathbf{x}_{t}, t \mid y)$$.
 
@@ -147,57 +146,63 @@ $$
 
 This kind of classifier-free guidance uses only the main model’s comprehension - an additional classifier is not needed - which yields better results according to Nichol et al. [[6]](#citation-6).
 
-## GLIDE
+## Text-guided diffusion with GLIDE
 
-Even though the paper describing GLIDE [Nichol et al., 2021] architecture received the least publicity out of all of the publications discussed in this post, it arguably presents the most novel and interesting ideas. It nicely combines all of the concepts presented in the previous chapter. We already know how diffusion models are working and that we can use them to generate images. Two questions we would like to answer now are:
+Even though the paper describing GLIDE [[6]](#citation-6) architecture received the least publicity out of all the publications discussed in this post, it arguably presents the most novel and interesting ideas. It combines all of the concepts presented in the previous chapter nicely. We already know how diffusion models work and that we can use them to generate images. The two questions we would now like to answer are:
 
 - How can we use the textual information to guide the diffusion model?
 - How can we make sure that the quality of the model is good enough?
 
 ### Architecture choice
 
-Three main components can be distinguished from the architecture: 
+Architecture can be boiled down to three main components:
 
-1. UNet based model responsible for the visual part of the diffusion learning,
-2. Transformer based model responsible for creating a text embedding from text snippet,
-3. Upsampling diffusion model used for enhancing output image resolution.
+1. A UNet based model responsible for the visual part of the diffusion learning,
+2. A transformer-based model responsible for creating a text embedding from a snippet of text,
+3. An upsampling diffusion model is used for enhancing output image resolution.
 
-First two are working together in order to create a text-guided image output, the last one is used for enlarging the image while preserving the quality.
+The first two work together in order to create a text-guided image output, while the last one is used to enlarge the image while preserving the quality.
 
-The core of the model is the well-known UNet architecture, used for the diffusion in [Dhariwal & Nichol, 2021]. The model, just like in early versions, stacks residual layers with downsampling and upsampling convolutions. It also consists of attention layers which are crucial for simultaneous text processing. Model proposed by authors has around 2.3 billion parameters and was trained on the same dataset as DALL·E.
+The core of the model is the well-known UNet architecture, used for the diffusion in Dhariwal & Nichol [[8]](#citation-8). The model, just like in its early versions, stacks residual layers with downsampling and upsampling convolutions. It also consists of attention layers which are crucial for simultaneous text processing. The model proposed by the authors has around 2.3 billion parameters and was trained on the same dataset as DALL·E.
 
-The text used for guidance is encoded in tokens and fed into Transformer model. The model used in GLIDE had roughly 1.2 billion parameters and was built from 24 residual blocks of width 2048. Output of the transformer has two purposes:
+The text used for guidance is encoded in tokens and fed into the Transformer model. The model used in GLIDE had roughly 1.2 billion parameters and was built from 24 residual blocks of width 2048. The output of the transformer has two purposes:
 
-- final embedding token is used as class embedding $$y$$ in $$\epsilon_{\theta}(\mathbf{x}_{t}, t \mid y)$$,
-- final layer of token embeddings is added to **every** attention layer of the model.
+- the final embedding token is used as class embedding $$y$$ in $$\epsilon_{\theta}(\mathbf{x}_{t}, t \mid y)$$,
+- the final layer of token embeddings is added to **every** attention layer of the model.
 
-It is clearly visible that a lot of focus was put into making sure that the model receives enough text-related context in order to generate accurate images. Model is conditioned on the text snippet embedding, encoded text is concatenated with the attention context and during training the classifier-free guidance is used.
+It is clear that a great deal of focus was put into making sure that the model receives enough text-related context in order to generate accurate images. The model is conditioned on the text snippet embedding, the encoded text is concatenated with the attention context and during training, the classifier-free guidance is used.
 
-As for the final component, authors used the diffusion model to go from low resolution to high resolution image. For that, they used a ImageNet upsampler.
+As for the final component, the authors used the diffusion model to go from a low-resolution to a high-resolution image using an ImageNet upsampler.
 
-![GLIDE interpretation of ‘a corgi in a field’, source: [https://arxiv.org/pdf/2112.10741.pdf](https://arxiv.org/pdf/2112.10741.pdf)](/assets/images/Untitled%203.png)
+<p align="center">
+  <img src="/assets/images/Untitled%203.png" />
+</p>
 
 *GLIDE interpretation of ‘a corgi in a field’, source: [https://arxiv.org/pdf/2112.10741.pdf](https://arxiv.org/pdf/2112.10741.pdf)*
 
-GLIDE is incorporating a few notable achievements developed in the recent years and sheds a new light into the text-guided image generation concept. Given that DALL·E model was based on different structures, it is fair to say that publication of GLIDE starts the diffusion-based text-to-image generation era.
+GLIDE incorporates a few notable achievements developed in recent years and sheds new light on the concept of text-guided image generation. Given that the DALL·E model was based on different structures, it is fair to say that the publication of GLIDE represents the dawn of the diffusion-based text-to-image generation era.
 
 ## DALL·E 2
 
-OpenAI’s team doesn’t seem to get much rest, as in April they took the Internet by the storm with DALL·E 2 [Ramesh et al., 2022]. It takes a bit from both predecessors: it heavily relies on CLIP [Radford et al., 2021] but the large part of solution revolves around GLIDE [Nichol et al., 2021] architecture. DALL·E 2 has two main underlying components called *prior* and *decoder,* which stacked together are able to produce image output. The whole mechanism was named *unCLIP,* which can already spoil a bit of mystery on what exactly is going on under the hood.
+The OpenAI team doesn’t seem to get much rest, as in April they took the Internet by storm with DALL·E 2 [[7]](#citation-7). It takes elements from both predecessors: it relies heavily on CLIP [[9]](#citation-9) but a large part of the solution revolves around GLIDE [[6]](#citation-6) architecture. DALL·E 2 has two main underlying components called the prior and the decoder, which are able to produce image output when stacked together. The entire mechanism was named unCLIP, which may already spoil the mystery of what exactly is going on under the hood.
 
-![Visualization of DALL·E 2 two-stage mechanism. Source: [https://arxiv.org/pdf/2204.06125.pdf](https://arxiv.org/pdf/2204.06125.pdf)](/assets/images/Untitled%204.png)
+<p align="center">
+  <img src="/assets/images/Untitled%204.png" />
+</p>
 
 *Visualization of DALL·E 2 two-stage mechanism. Source: [https://arxiv.org/pdf/2204.06125.pdf](https://arxiv.org/pdf/2204.06125.pdf)*
 
 ### The prior
 
-First stage is meant to convert the caption - text snippet such as *a “corgi playing a flame throwing trumpet” -* into a text embedding. We obtain it using a frozen CLIP model. 
+The first stage is meant to convert the caption - a text snippet such as a “*corgi playing a flame-throwing trumpet*” - into text embedding. We obtain it using a frozen CLIP model.
 
-After text embedding is obtained comes the fun part - we want now to obtain an image embedding, similar to the one which is obtained via CLIP model. We want it to encapsulate all important information from the text embedding, as it will be used for image generation through diffusion. Well, isn’t that exactly what CLIP is for? If we want to find a respective image embedding for our input phrase, we can just look what is close to our text embedding in the CLIP encoded space. One of the DALL·E 2 authors [Aditya Ramesh, 2022] posted a nice explanation of why that solution fails and why the prior is needed - “An infinite number of images could be consistent with a given caption, so the outputs of the two encoders will not perfectly coincide. Hence, a separate prior model is needed to “translate” the text embedding into an image embedding that could plausibly match it”. 
+After text embedding comes the fun part - we now want to obtain an image embedding, similar to the one which is obtained via the CLIP model. We want it to encapsulate all important information from the text embedding, as it will be used for image generation through diffusion. Well, isn’t that exactly what CLIP is for? If we want to find a respective image embedding for our input phrase, we can just look at what is close to our text embedding in the CLIP encoded space. One of the authors of DALL·E 2 posted a nice explanation of why that solution fails and why the prior is needed - “An infinite number of images could be consistent with a given caption, so the outputs of the two encoders will not perfectly coincide. Hence, a separate prior model is needed to “translate” the text embedding into an image embedding that could plausibly match it”.
 
-On top of that, authors checked the importance of the prior in the network empirically. Passing both the image embedding produced by the prior and the text vastly outperforms generation using only caption or caption with CLIP text embedding.
+On top of that, the authors empirically checked the importance of the prior in the network. Passing both the image embedding produced by the prior and the text vastly outperforms generation using only the caption or caption with CLIP text embedding.
 
-![Samples generated conditioned on: caption, text embedding and image embedding. Source: [https://arxiv.org/pdf/2204.06125.pdf](https://arxiv.org/pdf/2204.06125.pdf)](/assets/images/Untitled%205.png)
+<p align="center">
+  <img src="/assets/images/Untitled%205.png" />
+</p>
 
 *Samples generated conditioned on: caption, text embedding and image embedding. Source: [https://arxiv.org/pdf/2204.06125.pdf](https://arxiv.org/pdf/2204.06125.pdf)*
 
