@@ -27,22 +27,22 @@ In this post, we will sum up the very recent history of solving the text-to-imag
 
 *Short timeline of image generation and text-to-image solutions. Source: author*
 
-## DALL·E
+## It all starts with DALL·E
 
-In 2020 OpenAl team [Brown et al., 2020] published GPT-3 model - a multimodal does-it-all huge language model, capable of machine translation, text generation, semantic analysis etc. Model quickly became regarded as the state-of-the-art for language modeling solutions and DALL·E [Ramesh et al. 2021] can be viewed as a natural expansion of the transformer capabilities. 
+In 2020 the OpenAl team [[1]](#citation-1) published the GPT-3 model - a multimodal do-it-all huge language model, capable of machine translation, text generation, semantic analysis etc. The model swiftly became regarded as the state-of-the-art for language modeling solutions, and DALL·E [[7]](#citation-7) can be viewed as a natural expansion of the transformer capabilities into the computer vision domain. Below is a brief reminder of how DALL·E works.
 
 ### Autoregressive approach
 
-Authors proposed an elegant two stage approach:
+The authors proposed an elegant two-stage approach:
 
-- train a discrete VAE model for image compression into image tokens,
-- concatenate encoded text snippet with the image tokens and train the autoregressive transformer to learn the joint distribution over text and images.
+- train a discrete VAE model to compress images into image tokens,
+- concatenate the encoded text snippet with the image tokens and train the autoregressive transformer to learn the joint distribution over text and images.
 
-The final version was trained on 250 million text-image pairs obtained from the internet.
+The final version was trained on 250 million text-image pairs obtained from the Internet.
 
 ### CLIP
 
-During inference, the model is able to output a whole batch of generated images. But how can we estimate which images are *best*? Simultaneously with the publication of DALL·E, OpenAI team presented a solution for image and text linking called CLIP [Radford et al., 2021]. In a nutshell, CLIP offers a reliable way of pairing a text snippet with its image representation. Putting aside all of the technical aspects, the idea of training this type of model is fairly simple - take the text snippet and encode it, take an image and encode it. Do that for a lot of examples (400 millions of (image, text) pairs) and train the model in *contrastive* fashion. 
+During inference, the model is able to output a whole batch of generated images. But how can we estimate which images are *best*? Simultaneously with the publication of DALL·E, the OpenAI team presented a solution for image and text linking called CLIP [Radford et al., 2021]. In a nutshell, CLIP offers a reliable way of pairing a text snippet with its image representation. Putting aside all of the technical aspects, the idea of training this type of model is fairly simple - take the text snippet and encode it, take an image and encode it. Do that for a lot of examples (400 million (image, text) pairs) and train the model in a *contrastive* fashion.
 
 ![Visualisation of CLIP contrastive pre-training, source: [https://arxiv.org/pdf/2103.00020.pdf](https://arxiv.org/pdf/2103.00020.pdf)](/assets/images/Untitled.png)
 
@@ -284,6 +284,14 @@ For anyone who would like to admire some more examples of DALL·E 2 generative p
 
 {% include citation.html
     no="1"
+    authors="Tom B. Brown et al."
+    title="Language Models are Few-Shot Learners"
+    year="2020"
+    link="https://arxiv.org/abs/2005.14165"
+%}
+
+{% include citation.html
+    no="2"
     authors="Jascha Sohl-Dickstein, Eric A. Weiss, Niru Maheswaranathan, Surya Ganguli"
     title="Deep Unsupervised Learning using Nonequilibrium Thermodynamics"
     year="2015"
@@ -291,19 +299,11 @@ For anyone who would like to admire some more examples of DALL·E 2 generative p
 %}
 
 {% include citation.html
-    no="2"
+    no="3"
     authors="Jonathan Ho, Ajay Jain, Pieter Abbeel"
     title="Denoising Diffusion Probabilistic Models"
     year="2020"
     link="https://arxiv.org/abs/2006.11239v2"
-%}
-
-{% include citation.html
-    no="3"
-    authors="Tom B. Brown et al."
-    title="Language Models are Few-Shot Learners"
-    year="2020"
-    link="https://arxiv.org/abs/2005.14165"
 %}
 
 {% include citation.html
@@ -412,7 +412,7 @@ For anyone who would like to admire some more examples of DALL·E 2 generative p
 
 {% include citation.html
     no="17"
-    authors=""
+    authors="Google Brain team"
     title="DrawBench prompts"
     year="2022"
     link="https://docs.google.com/spreadsheets/d/1y7nAbmR4FREi6npB1u-Bo3GFdwdOPYJc617rBOxIRHY/htmlview?pru=AAABgRqAJJQ*agF3cOZ-eQVuWLxxWEwiWQ#gid=0"
@@ -420,7 +420,7 @@ For anyone who would like to admire some more examples of DALL·E 2 generative p
 
 {% include citation.html
     no="18"
-    authors=""
+    authors="Reddit"
     title="DALL·E 2 subreddit"
     year="2022"
     link="https://www.reddit.com/r/dalle2/"
@@ -428,7 +428,7 @@ For anyone who would like to admire some more examples of DALL·E 2 generative p
 
 {% include citation.html
     no="19"
-    authors=""
+    authors="OpenAI team"
     title="OpenAI’s waitilist"
     year="2022"
     link="https://labs.openai.com/waitlist"
