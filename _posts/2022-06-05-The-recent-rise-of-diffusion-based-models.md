@@ -106,9 +106,9 @@ In a practical sense, $$\mu_{\theta}(\mathbf{x}_{t}, t)$$ can be estimated via n
 
 *Forward and reverse diffusion processes, source: [[14]](#citation-14)*
 
-Estimating $$\mu_{\theta}(\mathbf{x}_{t}, t)$$ this way is possible, and was done, but [Ho et al., 2020] came up with a different way of training - a neural network $$\epsilon_{\theta}(\mathbf{x}_{t}, t)$$ can be trained to predict the noise $$\epsilon$$ from the earlier formulation of $$q\left(\mathbf{x}_{t} \mid \mathbf{x}_{0}\right)$$.
+Estimating $$\mu_{\theta}(\mathbf{x}_{t}, t)$$ this way is possible, but Ho et al. [[3]](#citation-3) came up with a different way of training - a neural network $$\epsilon_{\theta}(\mathbf{x}_{t}, t)$$ can be trained to predict the noise $$\epsilon$$ from the earlier formulation of $$q\left(\mathbf{x}_{t} \mid \mathbf{x}_{0}\right)$$.
 
-As in [Ho et al., 2020], the training process consists of steps:
+As in Ho et al. [[3]](#citation-3), the training process consists of steps:
 
 1. Sample image $$\mathbf{x}_{0}\sim q(\bf{x}_{0})$$,
 2. Choose a certain step in diffusion process $$t \sim U(\{1,2,...,T\})$$,
@@ -124,21 +124,28 @@ $$
 
 where $$t, \mathbf{x}_0$$ and $$\epsilon$$ are described as in the steps above.
 
-All of the formulations, reparametrizations and derivations can be a bit math extensive, but there are already some great resources available for anyone that wants to get a deeper understanding on the subject. Most notably, [Lillian Weng, 2021], [Angus Turner, 2021] and [Ayan Das, 2021] went through some deep derivations while mantaining understandable tone - highly recommend to check these posts.
+All of the formulations, reparametrizations and derivations are a bit math-extensive, but there are already some great resources available for anyone that wants to have a deeper understanding of the subject. Most notably, Lillian Weng [[13]](#citation-13), Angus Turner [[14]](#citation-14) and Ayan Das [[15]](#citation-15) went through some deep derivations while maintaining an understandable tone - I highly recommend checking these posts.
 
 ### Guiding the diffusion
 
-Above part itself explains how we can perceive diffusion model as generative. Once the model $$\epsilon_{\theta}(\mathbf{x}_{t}, t)$$ is trained we can use it to run the noise $$\mathbf{x}_{t}$$ back to $$\mathbf{x}_{0}$$. Given that it is easy to sample the noise from isotropic Gaussian distribution, we can obtain limitless image variations. We can also guide the image generation, by feeding additional information to the network during the training process. Assuming that the images are labelled, the information about class $$y$$ can be fed into a class-conditional diffusion model $$\epsilon_{\theta}(\mathbf{x}_{t}, t \mid y)$$.
+The above part itself explains how we can perceive the diffusion model as generative. Once the model $\epsilon_{\theta}(\mathbf{x}{t}, t)$ is trained, we can use it to run the noise $\mathbf{x}{t}$ back to $\mathbf{x}{0}$. Given that it is straightforward to sample the noise from isotropic Gaussian distribution, we can obtain limitless image variations. We can also guide the image generation by feeding additional information to the network during the training process. Assuming that the images are labeled, the information about class $y$ can be fed into a class-conditional diffusion model $\epsilon{\theta}(\mathbf{x}_{t}, t \mid y)$.
+One way of introducing the guidance in the training process is to train a separate model, which acts as a classifier of noisy images. At each step of denoising, the classifier checks whether the image is denoised in the right direction and contributes its own gradient of loss function into the overall loss of diffusion model.
+[Ho & Salimans, 2021] proposed an idea on how to feed the class information into the model without the need to train an additional classifier. During the training the model $\epsilon_{\theta}(\mathbf{x}{t}, t \mid y)$ is sometimes (with fixed probability) not shown the actual class $y$. Instead, the class label is replaced with the null label $\empty$. So it learns to perform diffusion with and without the guidance. For inference, the model performs two predictions, once given the class label $\epsilon{\theta}(\mathbf{x}{t}, t \mid y)$ and once not $\epsilon{\theta}(\mathbf{x}{t}, t \mid \empty)$. The final prediction of the model is moved away from $\epsilon{\theta}(\mathbf{x}{t}, t \mid \empty)$ and towards $\epsilon{\theta}(\mathbf{x}_{t}, t \mid y)$ by scaling with guidance scale $s \geqslant 1$.
 
-One way of introducing the guidance in the training process is to train a separate model, which acts as a classifier of noisy images. At each step of denoising the classifier checks whether the image is denoised *in the right direction* and contributes with its own gradient of loss function into the overall loss of diffusion model.
+This kind of classifier-free guidance uses only the main model’s comprehension - an additional classifier is not needed - which yields better results according to [Nichol et al. 2021].
 
-[Ho & Salimans, 2021] proposed an idea on how to feed the class information into the model without the need of training additional classifier. During the training the model $$\epsilon_{\theta}(\mathbf{x}_{t}, t \mid y)$$ is sometimes (with fixed probability) not being shown the actual class $$y$$. Instead, the class label is replaced with the null label $$\emptyset$$. So it learns to perform diffusion with and without the guidance. For inference, the model is performing two predictions, once given the class label $$\epsilon_{\theta}(\mathbf{x}_{t}, t \mid y)$$ and once not $$\epsilon_{\theta}(\mathbf{x}_{t}, t \mid \emptyset)$$. The final prediction of the model is moved away from $$\epsilon_{\theta}(\mathbf{x}_{t}, t \mid \emptyset)$$ and towards $$\epsilon_{\theta}(\mathbf{x}_{t}, t \mid y)$$ by scaling with *guidance scale $$s \geqslant 1$$.*
+
+The above part itself explains how we can perceive the diffusion model as generative. Once the model $$\epsilon_{\theta}(\mathbf{x}_{t}, t)$$ is trained, we can use it to run the noise $$\mathbf{x}_{t}$$ back to $$\mathbf{x}_{0}$$. Given that it is straightforward to sample the noise from isotropic Gaussian distribution, we can obtain limitless image variations. We can also guide the image generation by feeding additional information to the network during the training process. Assuming that the images are labeled, the information about class $y$ can be fed into a class-conditional diffusion model $$\epsilon_{\theta}(\mathbf{x}_{t}, t \mid y)$$.
+
+One way of introducing the guidance in the training process is to train a separate model, which acts as a classifier of noisy images. At each step of denoising, the classifier checks whether the image is denoised *in the right direction* and contributes its own gradient of loss function into the overall loss of diffusion model.
+
+Ho & Salimans [[5]](#citation-5) proposed an idea on how to feed the class information into the model without the need to train an additional classifier. During the training the model $$\epsilon_{\theta}(\mathbf{x}_{t}, t \mid y)$$ is sometimes (with fixed probability) not shown the actual class $$y$$. Instead, the class label is replaced with the null label $$\emptyset$$. So it learns to perform diffusion with and without the guidance. For inference, the model performs two predictions, once given the class label $$\epsilon_{\theta}(\mathbf{x}_{t}, t \mid y)$$ and once not $$\epsilon_{\theta}(\mathbf{x}_{t}, t \mid \emptyset)$$. The final prediction of the model is moved away from $$\epsilon_{\theta}(\mathbf{x}_{t}, t \mid \emptyset)$$ and towards $$\epsilon_{\theta}(\mathbf{x}_{t}, t \mid y)$$ by scaling with *guidance scale $$s \geqslant 1$$.*
 
 $$
 \hat{\epsilon}_{\theta}\left(\mathbf{x}_{t}, t \mid y\right)=\epsilon_{\theta}\left(\mathbf{x}_{t}, t \mid \emptyset\right)+s \cdot\left(\epsilon_{\theta}\left(\mathbf{x}_{t}, t \mid y\right)-\epsilon_{\theta}\left(\mathbf{x}_{t}, t \mid \emptyset\right)\right)
 $$
 
-This kind of classifier-free guidance uses only the main model’s comprehension - additional classifier is not needed - which yields better results according to [Nichol et al. 2021].
+This kind of classifier-free guidance uses only the main model’s comprehension - an additional classifier is not needed - which yields better results according to Nichol et al. [[6]](#citation-6).
 
 ## GLIDE
 
