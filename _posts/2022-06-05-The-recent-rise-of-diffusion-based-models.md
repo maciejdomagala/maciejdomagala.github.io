@@ -206,14 +206,14 @@ On top of that, the authors empirically checked the importance of the prior in t
 
 *Samples generated conditioned on: caption, text embedding and image embedding. Source: [https://arxiv.org/pdf/2204.06125.pdf](https://arxiv.org/pdf/2204.06125.pdf)*
 
-Authors tested two model classes for the prior: autoregressive model and diffusion model. This post will cover only the diffusion prior, as it was deemed better performing than autoregressive, especially from computational point of view. For the training of the prior a decoder-only Transformer model was chosen. It was trained by using a sequence of several inputs:
+The authors tested two model classes for the prior: the autoregressive model and the diffusion model. This post will cover only the diffusion prior, as it was deemed better performing than autoregressive, especially from a computational point of view. For the training of prior, a decoder-only Transformer model was chosen. It was trained by using a sequence of several inputs:
 
 - encoded text,
 - CLIP text embedding,
 - embedding for the diffusion timestep,
 - noised image embedding,
 
-with the goal of outputting an unnoised image embedding $$z_{i}$$. On the contrary to the way of training proposed by [Ho et al., 2020] covered in previous sections, predicting the unnoised image embedding directly instead of predicting the noise was a better fit. So, remembering the previous formula for diffusion loss in a guided model
+with the goal of outputting an unnoised image embedding $$z_{i}$$. As opposed to the way of training proposed by Ho et al.[[7]](#citation-7) covered in previous sections, predicting the unnoised image embedding directly instead of predicting the noise was a better fit. So, remembering the previous formula for diffusion loss in a guided model
 
 $$
 L_{\text{diffusion}}=\mathbb{E}_{t, \mathbf{x}_{0}, \epsilon}\left[\left\|\epsilon-\epsilon_{\theta}\left(\mathbf{x}_{t}, t\mid y\right)\right\|^{2}\right],
@@ -229,75 +229,81 @@ where $$f_{\theta}$$ stands for the prior model, $${z}_{i}^{t}$$ is the noised i
 
 ### The decoder
 
-We covered the prior part of the unCLIP, which was meant to produce a model that is able to encapsulate all of the important information from the text into a CLIP-like image embedding. Now we want to use that image embedding to generate an actual visual output. Now is when the name *unCLIP* unfolds itself - we are walking back from the image embedding to the image, in reverse to what happens when CLIP image encoder is trained.
+We covered the prior part of the unCLIP, which was meant to produce a model that is able to encapsulate all of the important information from the text into a CLIP-like image embedding. Now we want to use that image embedding to generate an actual visual output. This is when the name unCLIP unfolds itself - we are walking back from the image embedding to the image, the reverse of what happens when the CLIP image encoder is trained.
 
-As the saying goes: “After one diffusion model it is time for another diffusion model!”. And this one we already know - it is GLIDE, although slightly modified. Only *slightly*, since single major change is adding the additional CLIP image embedding (produced by the prior) to the vanilla GLIDE text encoder. After all, this is exactly what the prior was trained for - to provide information for the decoder. Just as in regular GLIDE, guidance is used. To improve it, CLIP embeddings are set to $$\emptyset$$ in 10% of cases and text captions $$y$$ in 50% of cases.
+As the saying goes: “After one diffusion model it is time for another diffusion model!”. And this one we already know - it is GLIDE, although slightly modified. Only slightly, since the single major change is adding the additional CLIP image embedding (produced by the prior) to the vanilla GLIDE text encoder. After all, this is exactly what the prior was trained for - to provide information for the decoder. Guidance is used just as in regular GLIDE. To improve it, CLIP embeddings are set to $$\emptyset$$ in 10% of cases and text captions $$y$$ in 50% of cases.
 
-Another thing that did not change is the idea of upsampling after the image generation. The output is tossed into additional diffusion-based models. This time two umsampling models are used (instead of one in original GLIDE), one taking the image from 64x64 to 256x256 and the other further enhancing resolution up to 1024x1024.
+Another thing that did not change is the idea of upsampling after the image generation. The output is tossed into additional diffusion-based models. This time two upsampling models are used (instead of one in the original GLIDE), one taking the image from 64x64 to 256x256 and the other further enhancing resolution up to 1024x1024.
 
 ## Imagen
 
-Google Brain team decided not to be late to the party, as not even two months after DALL·E 2 publication they presented their work - Imagen [Saharia et al., 2022].
+The Google Brain team decided not to be late to the party, as less than two months after the publication of DALL·E 2 they presented the fruits of their own labor - Imagen (Saharia et al. [[7]](#citation-7)).
 
-![Overview of Imagen architecture. Source: [https://arxiv.org/pdf/2205.11487.pdf](https://arxiv.org/pdf/2205.11487.pdf)](/assets/images/Untitled%206.png)
+<p align="center">
+  <img src="/assets/images/Untitled%206.png" />
+</p>
 
-*Overview of Imagen architecture. Source: [https://arxiv.org/pdf/2205.11487.pdf](https://arxiv.org/pdf/2205.11487.pdf)*
+*Overview of Imagen architecture. Source: [[7]](#citation-7)*
 
-Imagen architecture seems to be oddly simple in its structure. A pretrained textual model is used to create the embeddings that are diffused into an image. Next, the resolution is increased via super-resolution diffusion models - the steps we already know from DALL·E 2. A lot of novelties are scattered in different bits of the architecture - few in the model itself and several in the training process. Together, they offer a slight upgrade when comparing with other solutions. Given a large portion of knowledge already served, we can explain this model via differences with previously described models:
+Imagen architecture seems to be oddly simple in its structure. A pretrained textual model is used to create the embeddings that are diffused into an image. Next, the resolution is increased via super-resolution diffusion models - the steps we already know from DALL·E 2. A lot of novelties are scattered in different bits of the architecture - a few in the model itself and several in the training process. Together, they offer a slight upgrade when compared to other solutions. Given the large portion of knowledge already served, we can explain this model via differences with previously described models:
 
-**Use a pretrained transformer instead of training it from the scratch.**
-This is stated as the core improvement compared to OpenAI’s work. For everything regarding text embeddings, GLIDE authors used a new, specifically trained transformer model. Imagen authors used a pretrained, frozen T5-XXL model [Roberts et al., 2020]. The idea is that this model has a vastly more context regarding language processing than a model trained only on the image captions and hence is able to produce more valuable embeddings without the need to additionally fine-tune it.
-
+**Use a pretrained transformer instead of training it from scratch.**
+This is viewed as the core improvement compared to OpenAI’s work. For everything regarding text embeddings, the GLIDE authors used a new, specifically trained transformer model. The Imagen authors used a pretrained, frozen T5-XXL model [[4]](#citation-4). The idea is that this model has vastly more context regarding language processing than a model trained only on the image captions, and so is able to produce more valuable embeddings without the need to additionally fine-tune it.
 **Make the underlying neural network more efficient.**
-An upgraded version of neural network called *Efficient U-net* was used as the backbone of super-resolution diffusion models. It is said to be more memory efficient and simpler than previous version, also it converges faster. The changes were introduced mainly in residual blocks and via additional scaling of the values inside of the network. For anyone enjoying going deep into details - changes are well documented in [Saharia et al., 2022].
+An upgraded version of the neural network called Efficient U-net was used as the backbone of super-resolution diffusion models. It is said to be more memory-efficient and simpler than the previous version, and it converges faster as well. The changes were introduced mainly in residual blocks and via additional scaling of the values inside the network. For anyone who enjoys digging deep into the details - the changes are well documented in Saharia et al. [[7]](#citation-7).
+**Use conditioning augmentation to enhance image fidelity.**
+Since the solution can be viewed as a sequence of diffusion models, there is an argument to be made about enhancements in the areas where the models are linked. Ho et al. [[10]](#citation-10) presented a solution called conditioning augmentation. In simple terms, it is equivalent to applying various data augmentation techniques, such as a Gaussian blur, to a low-resolution image before it is fed into the super-resolution models.
 
-**Use *conditioning augmentation* to enhance image fidelity**
-Since the solution can be viewed as a sequence of diffusion models, there is an argument to be made about enhancements in the areas where the models are linking. [Ho et al., 2021] presented a solution called *conditioning augmentation.* In simple words, it is equivalent to applying various data augmentation techniques, such as Gaussian blur, to the low resolution image before it is fed into the super-resolution models.
+There are a few other resources deemed crucial to a low FID score and high image fidelity (such as dynamic thresholding) - these are explained in detail in the source paper [[7]](#citation-7). The core of the approach is already covered in previous chapters.
 
-There are a few other resources deemed crucial for the low FID score and high image fidelity (such as *dynamic thresholding*) - these are explained in details in the source paper [Saharia et al., 2022]. The core of the approach is already covered in previous chapters. 
+<p align="center">
+  <img src="/assets/images/Untitled%207.png" />
+</p>
 
-![Some of Imagen generations with captions. Source: [https://arxiv.org/pdf/2205.11487.pdf](https://arxiv.org/pdf/2205.11487.pdf)](/assets/images/Untitled%207.png)
-
-*Some of Imagen generations with captions. Source: [https://arxiv.org/pdf/2205.11487.pdf](https://arxiv.org/pdf/2205.11487.pdf)*
+*Some of Imagen generations with captions. Source: [[7]](#citation-7)*
 
 ### Is it *the best* yet?
 
-As of writing this text, Google’s Imagen is considered to be state-of-the-art as far as text-to-image generation is concerned. But why exactly is that? How can we evaluate the models and compare them against each other?
+As of writing this text, Google’s Imagen is considered to be state-of-the-art as far as text-to-image generation is concerned. But why exactly is that? How can we evaluate the models and compare them to each other?
 
-Authors of Imagen opted for two ways of evaluation. One is considered to be a current standard for text-to-image modelling, which is establishing a Fréchet inception distance score on a COCO validation dataset. Authors report (*unsurprisingly*) that Imagen shows a state-of-the-art performance, its *zero-shot* FID outperforming all other models, even these specifically trained on COCO.
+The authors of Imagen opted for two means of evaluation. One is considered to be the current standard for text-to-image modeling, namely establishing a Fréchet inception distance score on a COCO validation dataset. The authors report (unsurprisingly) that Imagen shows a state-of-the-art performance, its *zero-shot* FID outperforming all other models, even those specifically trained on COCO.
 
-![source: [https://arxiv.org/pdf/2205.11487.pdf](https://arxiv.org/pdf/2205.11487.pdf)](/assets/images/Untitled%208.png)
+<p align="center">
+  <img src="/assets/images/Untitled%208.png" />
+</p>
 
-*Comparison of several models. Source: [https://arxiv.org/pdf/2205.11487.pdf](https://arxiv.org/pdf/2205.11487.pdf)*
+*Comparison of several models. Source: [[7]](#citation-7)*
 
-Far more intruiging way of evaluation is a brand new proposal from the authors called DrawBench - *a comprehensive and challenging set of prompts that support the evaluation and comparison of text-to-image models (source).* It consists of 200 prompts falling into 11 categories, collected from e.g. DALL·E or Reddit. List of the prompts with categories can be found in [DrawBench prompts, 2022] Evaluation was performed by 275 *unbiased* (sic!) raters, 25 for each category. Each rater was shown two *non-cherry picked* and *random* sets of images generated by two different models (e.g. Imagen and DALL·E 2) and had to respond to two questions:
+A far more intriguing means of evaluation is a brand new proposal from the authors called DrawBench - a comprehensive and challenging set of prompts that support the evaluation and comparison of text-to-image models (source). It consists of 200 prompts divided into 11 categories, collected from e.g. DALL·E or Reddit. A list of the prompts with categories can be found in [[17]](#citation-17). The evaluation was performed by 275 unbiased (sic!) raters, 25 for each category. Each rater was shown two non-cherry picked and random sets of images generated by two different models (e.g. Imagen and DALL·E 2) and had to respond to two questions:
 
 1. Which set of images is of higher quality?
 2. Which set of images better represents the text caption?
 
-These two questions are meant to address two most important characteristics of a good text-to-image model: quality of produced images (fidelity) and how well it reflects the input text prompt (alignment). Each rater had three choices - to claim that one of the models is performing better or to call it a tie. Once again - there can be only one winner. Interestingly, GLIDE model seems to be performing a bit better than DALL·E 2, at least on this curated dataset.
+These two questions are meant to address the two most important characteristics of a good text-to-image model: the quality of the images produced (fidelity) and how well it reflects the input text prompt (alignment). Each rater had three choices - to claim that one of the models performs better, or to call it a tie. Once again, there can be only one winner. Interestingly, the GLIDE model seems to perform slightly better than DALL·E 2, at least based on this curated dataset.
 
-![Source: https://arxiv.org/pdf/2205.11487.pdf](/assets/images/Untitled%209.png)
+<p align="center">
+  <img src="/assets/images/Untitled%209.png" />
+</p>
 
-*Imagen vs other models. Source: https://arxiv.org/pdf/2205.11487.pdf*
+*Imagen vs other models. Source: [[7]](#citation-7)*
 
-As expected, a large portion of the publication is devoted to the comparison between the images produced by Imagen and GLIDE/DALL·E - more can be found in Appendix E of [Saharia et al., 2022].
+As expected, a large portion of the publication is devoted to the comparison between the images produced by Imagen and GLIDE/DALL·E - more can be found in Appendix E of [[7]](#citation-7).
 
 ## The fun is far from over
 
-As usual, with the new architecture gaining recognition there is a large surge of interesting publications and solutions emerging from the void. The pace of developments makes it nearly impossible to track every interesting publication. There are also a lot of interesting characteristics  of the models to discover other than raw generative power, such as image inpainting, style transfer and image editing.
+As usual, with new architecture gaining recognition there is a surge of interesting publications and solutions emerging from the void. The pace of developments makes it nearly impossible to track every interesting publication. There are also a lot of interesting characteristics of the models to discover other than raw generative power, such as image inpainting, style transfer, and image editing.
 
-Apart from the understandable excitement over a new era of generative models, there are some shortcomings embedded into the diffusion process structure, such as slow sampling speed compared to previous models [Vahdat and Kreis, 2022].
+Apart from the understandable excitement over a new era of generative models, there are some shortcomings embedded into the diffusion process structure, such as slow sampling speed compared to previous models [[16]](#citation-16).
 
 <p align="center">
   <img src="/assets/images/Untitled%2010.png" />
 </p>
 
-*Source: [https://developer.nvidia.com/blog/improving-diffusion-models-as-an-alternative-to-gans-part-1/](https://developer.nvidia.com/blog/improving-diffusion-models-as-an-alternative-to-gans-part-1/)*
+*Models comparison. Source: [[16]](#citation-16)*
 
-For anyone who likes to get deep into the bits of implementation, I highly recommend going through Phil Wang’s (@lucidrains on github) repositories [Phil Wang’s repositories], which is a collaborative effort from many people to recreate the unpublished models in PyTorch.
+For anyone who likes to go deep into the minutiae of implementation, I highly recommend going through Phil Wang’s (@lucidrains on github) repositories [[20]](#citation-20), which is a collaborative effort from many people to recreate the unpublished models in PyTorch.
 
-For anyone who would like to admire some more examples of DALL·E 2 generative power, I recommend checking newly created subreddit with DALL·E 2 creations in [DALL·E 2 subreddit]. It is moderated by people with OpenAI’s Lab access - feel free to join the waitlist [OpenAI’s waitilist] and have the opportunity to play with models yourself.
+For anyone who would like to admire some more examples of DALL·E 2’s generative power, I recommend checking the newly created subreddit with DALL·E 2 creations in [[18]](#citation-18). It is moderated by people with OpenAI’s Lab access - feel free to join the waitlist [[19]](#citation-19) and have the opportunity to play with models yourself.
 
 ## References
 
