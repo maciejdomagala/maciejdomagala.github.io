@@ -42,13 +42,13 @@ The final version was trained on 250 million text-image pairs obtained from the 
 
 ### CLIP
 
-During inference, the model is able to output a whole batch of generated images. But how can we estimate which images are *best*? Simultaneously with the publication of DALL·E, the OpenAI team presented a solution for image and text linking called CLIP [Radford et al., 2021]. In a nutshell, CLIP offers a reliable way of pairing a text snippet with its image representation. Putting aside all of the technical aspects, the idea of training this type of model is fairly simple - take the text snippet and encode it, take an image and encode it. Do that for a lot of examples (400 million (image, text) pairs) and train the model in a *contrastive* fashion.
+During inference, the model is able to output a whole batch of generated images. But how can we estimate which images are *best*? Simultaneously with the publication of DALL·E, the OpenAI team presented a solution for image and text linking called CLIP [[9]](#citation-9). In a nutshell, CLIP offers a reliable way of pairing a text snippet with its image representation. Putting aside all of the technical aspects, the idea of training this type of model is fairly simple - take the text snippet and encode it, take an image and encode it. Do that for a lot of examples (400 million (image, text) pairs) and train the model in a *contrastive* fashion.
 
 <p align="center">
   <img src="/assets/images/Untitled.png" />
 </p>
 
-*Visualisation of CLIP contrastive pre-training, source: [https://arxiv.org/pdf/2103.00020.pdf](https://arxiv.org/pdf/2103.00020.pdf)*
+*Visualisation of CLIP contrastive pre-training, source: [[9]](#citation-9)*
 
 This kind of *mapping* allows us to estimate which of the generated images are the best match considering the text input.
 DALL·E attracted major attention from people both inside and outside the AI world; it gained lots of publicity and stirred a great deal of conversation. Even so, it only gets an honorable mention here, as the trends shifted quite quickly towards novel ideas.
@@ -178,7 +178,7 @@ As for the final component, the authors used the diffusion model to go from a lo
   <img src="/assets/images/Untitled%203.png" />
 </p>
 
-*GLIDE interpretation of ‘a corgi in a field’, source: [https://arxiv.org/pdf/2112.10741.pdf](https://arxiv.org/pdf/2112.10741.pdf)*
+*GLIDE interpretation of ‘a corgi in a field’, source: [[6]](#citation-6)*
 
 GLIDE incorporates a few notable achievements developed in recent years and sheds new light on the concept of text-guided image generation. Given that the DALL·E model was based on different structures, it is fair to say that the publication of GLIDE represents the dawn of the diffusion-based text-to-image generation era.
 
@@ -190,7 +190,7 @@ The OpenAI team doesn’t seem to get much rest, as in April they took the Inter
   <img src="/assets/images/Untitled%204.png" />
 </p>
 
-*Visualization of DALL·E 2 two-stage mechanism. Source: [https://arxiv.org/pdf/2204.06125.pdf](https://arxiv.org/pdf/2204.06125.pdf)*
+*Visualization of DALL·E 2 two-stage mechanism. Source: [[7]](#citation-7)*
 
 ### The prior
 
@@ -204,7 +204,7 @@ On top of that, the authors empirically checked the importance of the prior in t
   <img src="/assets/images/Untitled%205.png" />
 </p>
 
-*Samples generated conditioned on: caption, text embedding and image embedding. Source: [https://arxiv.org/pdf/2204.06125.pdf](https://arxiv.org/pdf/2204.06125.pdf)*
+*Samples generated conditioned on: caption, text embedding and image embedding. Source: [[7]](#citation-7)*
 
 The authors tested two model classes for the prior: the autoregressive model and the diffusion model. This post will cover only the diffusion prior, as it was deemed better performing than autoregressive, especially from a computational point of view. For the training of prior, a decoder-only Transformer model was chosen. It was trained by using a sequence of several inputs:
 
