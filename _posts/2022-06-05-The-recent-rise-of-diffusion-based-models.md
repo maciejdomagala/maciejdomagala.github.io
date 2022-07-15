@@ -248,10 +248,15 @@ The Google Brain team decided not to be late to the party, as less than two mont
 Imagen architecture seems to be oddly simple in its structure. A pretrained textual model is used to create the embeddings that are diffused into an image. Next, the resolution is increased via super-resolution diffusion models - the steps we already know from DALL·E 2. A lot of novelties are scattered in different bits of the architecture - a few in the model itself and several in the training process. Together, they offer a slight upgrade when compared to other solutions. Given the large portion of knowledge already served, we can explain this model via differences with previously described models:
 
 **Use a pretrained transformer instead of training it from scratch.**
+
 This is viewed as the core improvement compared to OpenAI’s work. For everything regarding text embeddings, the GLIDE authors used a new, specifically trained transformer model. The Imagen authors used a pretrained, frozen T5-XXL model [[4]](#citation-4). The idea is that this model has vastly more context regarding language processing than a model trained only on the image captions, and so is able to produce more valuable embeddings without the need to additionally fine-tune it.
+
 **Make the underlying neural network more efficient.**
+
 An upgraded version of the neural network called Efficient U-net was used as the backbone of super-resolution diffusion models. It is said to be more memory-efficient and simpler than the previous version, and it converges faster as well. The changes were introduced mainly in residual blocks and via additional scaling of the values inside the network. For anyone who enjoys digging deep into the details - the changes are well documented in Saharia et al. [[7]](#citation-7).
+
 **Use conditioning augmentation to enhance image fidelity.**
+
 Since the solution can be viewed as a sequence of diffusion models, there is an argument to be made about enhancements in the areas where the models are linked. Ho et al. [[10]](#citation-10) presented a solution called conditioning augmentation. In simple terms, it is equivalent to applying various data augmentation techniques, such as a Gaussian blur, to a low-resolution image before it is fed into the super-resolution models.
 
 There are a few other resources deemed crucial to a low FID score and high image fidelity (such as dynamic thresholding) - these are explained in detail in the source paper [[7]](#citation-7). The core of the approach is already covered in previous chapters.
